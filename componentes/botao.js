@@ -1,6 +1,22 @@
 import { StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { useFonts } from "expo-font";
 
 export default function Botao({ txtBtn, onPress }) {
+  
+  const [fonts] = useFonts ({
+  
+      'garamond':require('../assets/fontes/garamond.ttf'),
+      'garamonditalic':require('../assets/fontes/garamonditalic.ttf')
+  
+    })
+  
+  if(!fonts){
+  
+    return null;
+  
+  }
+
+  
   return (
     <TouchableOpacity style={styles.button} onPress={onPress}>
       <Text style={styles.buttonText}>{txtBtn}</Text>
@@ -35,12 +51,12 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: "#faf3e8",
-    fontSize: 15,
+    fontSize: 19,
     fontWeight: "500",
     letterSpacing: 2,
     textTransform: "uppercase",
     textShadowOffset: { width: 1.5, height: 1.5 },
     textShadowRadius: 3,
-    fontStyle: "italic",
+    fontFamily:"garamonditalic"
   },
 });

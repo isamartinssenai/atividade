@@ -1,7 +1,20 @@
 import React from "react";
 import { Text, StyleSheet } from "react-native";
+import { useFonts } from "expo-font";
 
 export default function Titulo({ tit }) {
+    const [fonts] = useFonts ({
+  
+      'breeserif':require('../assets/fontes/breeserif.ttf'),
+  
+    })
+  
+  if(!fonts){
+  
+    return null;
+  
+  }
+
   return (
     <Text style={texto.txt}>
       {tit}
@@ -12,8 +25,7 @@ export default function Titulo({ tit }) {
 const texto = StyleSheet.create({
   txt: {
     color: "#2c1810",
-    fontSize: 52,
-    fontFamily: "Garamond",
+    fontSize: 55,
     fontWeight: "400",
     letterSpacing: 2,
     textAlign: "center",
@@ -28,5 +40,6 @@ const texto = StyleSheet.create({
     paddingBottom: 15,
     textTransform: "uppercase",
     fontStyle: "normal",
+    fontFamily:"breeserif"
   },
 });

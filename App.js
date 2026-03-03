@@ -1,36 +1,28 @@
-import Container from "./componentes/container";
-import Titulo from "./componentes/titulo";
-import Label from "./componentes/label";
-import Input from "./componentes/input";
-import Botao from "./componentes/botao";
-import Backgroung from "./componentes/background";
-import { Alert, Image, View} from "react-native";
+//import { createNativeStackNavigator } from "@react-navigation/native-stack";
+//import { createDrawerNavigator } from "@react-navigation/drawer";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { NavigationContainer } from "@react-navigation/native";
+import Login from "./pages/login";
+import Cadastro from "./pages/cadastro";
+import Inicial from "./pages/inicial";
 
 export default function App() {
+
+  const Stack = createBottomTabNavigator();
+
   return (
-    <Backgroung>
-      <Container>
-        <Titulo tit={"Login"}/>
-        
-        <View style={{flexDirection:"row", alignContent:"flex-start"}}>
-          <Label label={"Nome.:"}/>     
-          <Input/>
-        </View>     
-        
-        <View style={{flexDirection:"row", alignContent:"flex-end"}}>
-          <Label label={"Email.:"}/>     
-          <Input/>
-        </View>
-        
-        <View style={{flexDirection:"row", alignContent:"flex-end"}}>
-          <Label label={"Senha.:"}/>     
-          <Input/>
-        </View>
-        
-        <Botao onPress={()=>Alert.alert("Sucesso", "Login concluído com sucesso")} txtBtn={"Aperte para logar!"}/>
-        
-        <Image source={require("./assets/logo.png")} style={{height:100,width:178,marginTop: 30,marginBottom: 20}}/>
-      </Container>
-    </Backgroung>
+    
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="Login">
+
+        <Stack.Screen name="Login" component={Login}/>
+        <Stack.Screen name="Cadastro" component={Cadastro}/>
+        <Stack.Screen name="Inicial" component={Inicial}/>
+
+
+      </Stack.Navigator>
+    </NavigationContainer>
+
   );
 }
+

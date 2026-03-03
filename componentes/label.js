@@ -1,9 +1,20 @@
 import react from "react";
 import {Text, StyleSheet} from "react-native";
-
-
+import { useFonts } from "expo-font";
 
 export default function Label({label}){
+  const [fonts] = useFonts ({
+
+    'garamond':require('../assets/fontes/garamond.ttf'),
+    'garamonditalic':require('../assets/fontes/garamonditalic.ttf')
+
+  })
+
+if(!fonts){
+
+  return null;
+
+}
     return(
 
 <Text style={texto.txt}>
@@ -23,7 +34,6 @@ const texto = StyleSheet.create({
     marginBottom: 6,
     marginLeft: 20,
     fontWeight: "400",
-    fontFamily: "Cochin",
     letterSpacing: 1.8,
     textTransform: "lowercase",
     fontVariant: ["small-caps"],
@@ -40,5 +50,7 @@ const texto = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 3,
     elevation: 2,
+    fontFamily:"garamond"
+
   },
 });
