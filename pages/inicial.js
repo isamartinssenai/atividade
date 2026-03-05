@@ -4,10 +4,23 @@ import Botao from "../componentes/botao";
 import Backgroung from "../componentes/background";
 import Texto from "../componentes/texto";
 import { Alert, Image, View, Text, ScrollView, StyleSheet, Dimensions } from "react-native";
+import { useFonts } from "expo-font";
 
 const { width } = Dimensions.get('window');
 
 export default function Home({ navigation }) {
+const [fonts] = useFonts ({
+  
+      'breeserif':require('../assets/fontes/breeserif.ttf'),
+  
+    })
+  
+  if(!fonts){
+  
+    return null;
+  
+  }
+
   return (
     <Backgroung>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -308,6 +321,7 @@ const styles = StyleSheet.create({
     color: '#8B5A2B',
     fontWeight: '600',
     marginBottom: 10,
+    fontFamily:"breeserif"
   },
   dividerSmall: {
     width: 50,
