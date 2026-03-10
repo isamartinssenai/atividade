@@ -4,7 +4,7 @@ import {ImageBackground, StyleSheet} from 'react-native';
 
 
  
-export default function Backgroung({children}){
+export default function Background({children}){
 
   const image = {uri: 'https://i.pinimg.com/736x/ca/55/0b/ca550b01d5b66dacd10e3ae06af30b16.jpg'};
   return(

@@ -3,12 +3,16 @@ import Titulo from "../componentes/titulo";
 import Label from "../componentes/label";
 import Input from "../componentes/input";
 import Botao from "../componentes/botao";
-import Backgroung from "../componentes/background";
-import { Alert, Image, View} from "react-native";
+import Background from "../componentes/background";
+import { Alert, Image, View, Text, TouchableOpacity } from "react-native";
 
-export default function Login({navigation}) {
+
+export default function Login({navigation}){
+  
+  
+
   return (
-    <Backgroung>
+    <Background>
       <Container>
         <Titulo tit={"Login"}/>
         
@@ -27,11 +31,23 @@ export default function Login({navigation}) {
           <Input placeholder={"Digite sua senha..."}/>
         </View>
         
-        <Botao onPress={()=>Alert.alert("Sucesso!", "Login concluído com sucesso")} txtBtn={"Aperte para logar!"}/>
+        <Botao 
+         
+          txtBtn={"Aperte para logar!"}
+        />
+
+       
+        <TouchableOpacity>
+          <Text style={{marginTop:15, color:"black", textAlign:"center"}} onPress={()=>navigation.navigate("Cadastro")}>
+            Não tem cadastro? Clique Aqui!
+          </Text>
+        </TouchableOpacity>
         
-        <Image source={require("../assets/imagens/logo.png")} style={{height:100,width:178,marginTop: 30,marginBottom: 20}}/>
+        <Image 
+          source={require("../assets/logo.png")} 
+          style={{height:100,width:178,marginTop: 30,marginBottom: 20}}
+        />
       </Container>
-    </Backgroung>
+    </Background>
   );
 }
-

@@ -1,7 +1,7 @@
 import Container from "../componentes/container";
 import Titulo from "../componentes/titulo";
 import Botao from "../componentes/botao";
-import Backgroung from "../componentes/background";
+import Background from "../componentes/background";
 import Texto from "../componentes/texto";
 import { Alert, Image, View, Text, ScrollView, StyleSheet, Dimensions } from "react-native";
 import { useFonts } from "expo-font";
@@ -22,13 +22,13 @@ const [fonts] = useFonts ({
   }
 
   return (
-    <Backgroung>
+    <Background>
       <ScrollView showsVerticalScrollIndicator={false}>
         <Container>
           <View style={styles.header}>
             <View style={styles.headerOverlay} />
             <Image 
-              source={require("../assets/imagens/logo.png")} 
+              source={require("../assets/logo.png")} 
               style={styles.logo}
               resizeMode="contain"
             />
@@ -131,7 +131,7 @@ const [fonts] = useFonts ({
           </View>
         </Container>
       </ScrollView>
-    </Backgroung>
+    </Background>
   );
 }
 
