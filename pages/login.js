@@ -17,11 +17,11 @@ const [pass, setPass] = useState("");
  const log = () => {   
  
 
-  if(user.trim === "gim" && email.trim === "gim@gmail.com" && pass.trim === "123"){
+  if(user=== "gim" && email === "gim@gmail.com" && pass === "123"){
     Alert.alert("Sucesso!", "Usuário Logado com Sucesso!");
-     navigation.navigate("Cadastro");
+     navigation.navigate("Cep");
 
-  } else if(user.trim === " " || email.trim === " " || pass.trim === " "){
+  } else if(user === "" || email.trim === "" || pass === ""){
     Alert.alert("ERRO", "Favor preencher todos os campos!");
 
   } else {

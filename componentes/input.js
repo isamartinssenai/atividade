@@ -1,20 +1,22 @@
 import React from "react";
 import { TextInput, StyleSheet } from "react-native";
 
-export default function Input({ placeholder, placeholderTextColor }) {
+export default function Input({ placeholder, placeholderTextColor, ...rest }) {
   return (
     <TextInput 
       style={style.inp} 
       placeholder={placeholder} 
       placeholderTextColor={placeholderTextColor}
+      {...rest}
     />
   );
 }
 
 const style = StyleSheet.create({
   inp: {
+    color:"#241010",
     width: "60%",
-    height: 40,
+    height: 50,
     borderWidth: 1,
     borderColor: "#c7b5a2",
     borderRadius: 20,
@@ -37,6 +39,7 @@ const style = StyleSheet.create({
     borderBottomColor: "#a48f7a",
     fontStyle: "italic",
     fontWeight: "300",
-    lineHeight: 54,
+    justifyContent:"center",
+    alignItems:"center"
   },
 });

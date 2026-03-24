@@ -12,22 +12,21 @@ export default function Cadastro({ navigation }) {
   const [user, setUser] = useState("");
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
-  const [CPF, setcpf] = useState("");
+  const [cpf, setcpf] = useState("");
   const [idade, setidade] = useState("");
 
   function Cadastrar() {
 
-    if (user === "" || email === "" || pass === "" || CPF === "" || idade === "") {
+    if (user === "" || email === "" || pass === "" || cpf === "" || idade === "") {
 
       Alert.alert("ERRO", "Preencha todos os campos!");
-      console.log("azedou");
+      
 
     } else { 
 
       Alert.alert("Sucesso!", "Cadastro realizado com sucesso!");
-      console.log("Estou aqui");
       navigation.navigate ("Login");
-      
+
     }
 
   }
@@ -69,7 +68,7 @@ export default function Cadastro({ navigation }) {
           <Label label={"CPF.:"} />
           <Input
             placeholder={"Digite seu CPF..."}
-            value={CPF}
+            value={cpf}
             onChangeText={setcpf}
           />
         </View>
