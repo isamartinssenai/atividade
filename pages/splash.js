@@ -18,7 +18,7 @@ const validacao = async()=>{
 const time = setTimeout(()=>{
 
     if(token){
-navigation.navigate("Cep");
+navigation.navigate("Conceito");
 
 
 }else{
