@@ -12,8 +12,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 export default function Lista() {
-  const [dados, setDados] = useState([]);
-  const [modal, setModal] = useState(false);
+  const [dados, setDados] = useState([]); 
+  const [modal, setModal] = useState(false); 
   const [recebeDado, setRecebeDado] = useState("");
 
   useEffect(() => {
@@ -23,7 +23,7 @@ export default function Lista() {
         console.log("token recebido", token);
 
         const response = await axios.post(
-          "http://10.122.41.133:8000/api/todos_ebooks",
+          "http://10.122.41.147:8000/api/todos_ebooks",
           {
             token: token,
           }

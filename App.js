@@ -10,6 +10,7 @@ import Home from "./pages/home";
 import Cadastro from "./pages/cadastro";
 import Cep from "./pages/cep";
 import Conceito from "./pages/conceito";
+import CadastroLivro from "./pages/cadastrolivro";
 
 
 export default function App() {
@@ -27,6 +28,7 @@ export default function App() {
 
         <Stack.Screen name="Home" component={Home} options={{headerTitle:"", headerTransparent:true}}/>
         <Stack.Screen name="Conceito" component={Conceito} options={{headerTitle:"", headerTransparent:true, headerBackVisible:false}}/>
+        <Stack.Screen name="CadastroLivro" component={CadastroLivro} options={{headerTitle:"", headerTransparent:true, headerBackVisible:false}}/>
       </Stack.Navigator>
     </NavigationContainer>
 

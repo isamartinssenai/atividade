@@ -28,7 +28,7 @@ if(email === "" && pass === ""){
 
   try {
 
-    const response = await axios.post("http://10.122.41.133:8000/api/login_novo",{
+    const response = await axios.post("http://10.122.41.147:8000/api/login_novo",{
 
     email:email,
     senha:pass,
@@ -41,7 +41,7 @@ if(response.data.token){
  await AsyncStorage.setItem('token',response.data.token);
 
 Alert.alert("Sucesso!", "Usuário Logado com Sucesso!");
-     navigation.navigate("Conceito");
+     navigation.navigate("CadastroLivro");
 
 }else{
 
