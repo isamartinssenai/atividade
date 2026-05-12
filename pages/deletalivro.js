@@ -1,6 +1,7 @@
 import { useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
+import { useRoute } from "@react-navigation/native";
 import Container from "../componentes/container";
 import Titulo from "../componentes/titulo";
 import Label from "../componentes/label";
@@ -9,14 +10,16 @@ import Botao from "../componentes/botao";
 import Background from "../componentes/background";
 import { Alert, Image, View, Text, TouchableOpacity } from "react-native";
 
-export default function CadastroLivro({ navigation }) {
+export default function DeletaLivro({ navigation, route }) {
 
-  //livro titulo autor sinopse texto genero
-  const [titulo, setTitulo] = useState("");
-  const [autor, setAutor] = useState("");
-  const [sinopse, setSinopse] = useState("");
-  const [texto, settexto] = useState("");
-  const [gen, setGen] = useState("");
+    const { recebeDado } = route.params || {};
+    const item = recebeDado || {};
+const [id, setId] = useState(item?.id || "");
+  const [titulo, setTitulo] = useState(item?.titulo||"");
+  const [autor, setAutor] = useState(item?.autor||"");
+  const [sinopse, setSinopse] = useState(item?.sinopse||"");
+  const [texto, settexto] = useState(item?.texto||"");
+  const [gen, setGen] = useState(item?.gen||"");
 
  
 
@@ -39,8 +42,9 @@ export default function CadastroLivro({ navigation }) {
 
     if(token){
 
-      const response = await axios.post("http://10.122.41.152:8000/api/cadastra_ebook",{
+      const response = await axios.put("http://10.122.41.152:8000/api/altera_ebook",{
 
+    id_ebook:id,
   token:token,
   titulo:titulo,
   autor:autor,
@@ -52,7 +56,7 @@ export default function CadastroLivro({ navigation }) {
       });
       console.log (response.data);
 
-       Alert.alert("SUCESSO", "Livro cadastrado com sucesso");
+       Alert.alert("SUCESSO", "Dados alterados com sucesso!!");
        navigation.replace("Conceito");
     }
     }catch(error){
@@ -71,7 +75,7 @@ export default function CadastroLivro({ navigation }) {
   return (
     <Background>
       <Container>
-        <Titulo tit={"Cadastro Ebook"} />
+        <Titulo tit={"Deleta Ebook"} />
 
        
 
@@ -125,7 +129,7 @@ export default function CadastroLivro({ navigation }) {
 
 
         <Botao
-          txtBtn={"Cadastrar"}
+          txtBtn={"Editar"}
           onPress={Cadastrar}
         />
 

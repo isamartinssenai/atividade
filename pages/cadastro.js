@@ -48,7 +48,7 @@ const value = {
 
       try{
 
-      const response = await axios.post("http://10.122.41.147:8000/api/cadastro_usuario",value);
+      const response = await axios.post("http://10.122.41.152:8000/api/cadastro_usuario",value);
       console.log (response.data);
 
        Alert.alert("SUCESSO", "Usuário cadastrado com sucesso");

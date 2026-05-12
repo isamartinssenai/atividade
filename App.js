@@ -11,6 +11,8 @@ import Cadastro from "./pages/cadastro";
 import Cep from "./pages/cep";
 import Conceito from "./pages/conceito";
 import CadastroLivro from "./pages/cadastrolivro";
+import EditaLivro from "./pages/editalivro";
+import DeletaLivro from "./pages/deletalivro";
 
 
 export default function App() {
@@ -25,10 +27,11 @@ export default function App() {
         <Stack.Screen name="Cep" component={Cep} options={{headerTitle:"", headerTransparent:true, headerBackVisible:false}}/>  
         <Stack.Screen name="Login" component={Login} options={{headerTitle:"", headerTransparent:true, headerBackVisible:false}}/>
         <Stack.Screen name="Cadastro" component={Cadastro} options={{headerTitle:"", headerTransparent:true}}/>   
-
         <Stack.Screen name="Home" component={Home} options={{headerTitle:"", headerTransparent:true}}/>
         <Stack.Screen name="Conceito" component={Conceito} options={{headerTitle:"", headerTransparent:true, headerBackVisible:false}}/>
         <Stack.Screen name="CadastroLivro" component={CadastroLivro} options={{headerTitle:"", headerTransparent:true, headerBackVisible:false}}/>
+        <Stack.Screen name="EditaLivro" component={EditaLivro} options={{headerTitle:"", headerTransparent:true, headerBackVisible:false}}/>
+        <Stack.Screen name="DeletaLivro" component={DeletaLivro} options={{headerTitle:"", headerTransparent:true, headerBackVisible:false}}/>
       </Stack.Navigator>
     </NavigationContainer>
 

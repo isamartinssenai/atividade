@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Container from "../componentes/container";
 import Titulo from "../componentes/titulo";
 import Label from "../componentes/label";
@@ -9,21 +9,23 @@ import axios from "axios";
 import {View, Text, StyleSheet, FlatList, Pressable, Modal, TouchableOpacity, ImageBackground,ScrollView} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useFocusEffect } from "@react-navigation/native";
+import react from "react";
 
 
-export default function Lista() {
+export default function Lista({ navigation }) {
   const [dados, setDados] = useState([]); 
   const [modal, setModal] = useState(false); 
   const [recebeDado, setRecebeDado] = useState("");
 
-  useEffect(() => {
+  
     async function Buscar() {
       try {
         const token = await AsyncStorage.getItem("token");
         console.log("token recebido", token);
 
         const response = await axios.post(
-          "http://10.122.41.147:8000/api/todos_ebooks",
+          "http://10.122.41.152:8000/api/todos_ebooks",
           {
             token: token,
           }
@@ -35,8 +37,11 @@ export default function Lista() {
       }
     }
 
+useFocusEffect(React.useCallback(() => {
+
     Buscar();
-  }, []);
+
+  }, []));
 
   const renderItem = ({ item }) => (
     <Pressable
@@ -90,10 +95,29 @@ export default function Lista() {
                   style={styles.botao}
                   onPress={() => setModal(false)}
                 >
-                  <Text style={styles.textoBotao}>
+                  <Text style={styles.textoBotao}>  
                     Fechar
                   </Text>
                 </TouchableOpacity>
+
+              <TouchableOpacity
+              style={styles.botao}
+              onPress={() =>navigation.navigate("EditaLivro", recebeDado)}>
+  <Text style={styles.textoBotao}>
+    Editar
+  </Text>
+</TouchableOpacity>
+ <TouchableOpacity
+              style={styles.botao}
+              onPress={() => {
+              console.log(recebeDado)
+              navigation.navigate("DeletaLivro", { recebeDado })
+  }}
+>
+  <Text style={styles.textoBotao}>
+    Deletar
+  </Text>
+</TouchableOpacity>
 
               </View>
 
@@ -211,5 +235,6 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
 
     elevation: 5,
+    
   },
 });
