@@ -1,25 +1,19 @@
-import React, { useState, useEffect } from "react";
-import Container from "../componentes/container";
-import Titulo from "../componentes/titulo";
-import Label from "../componentes/label";
-import Input from "../componentes/input";
-import Botao from "../componentes/botao";
-import Background from "../componentes/background";
+import React, { useState,useCallback } from "react";
 import axios from "axios";
-import {View, Text, StyleSheet, FlatList, Pressable, Modal, TouchableOpacity, ImageBackground,ScrollView} from "react-native";
+import {View, Text, StyleSheet, FlatList, Pressable, Modal, TouchableOpacity, ImageBackground, ScrollView} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from "@react-navigation/native";
-import react from "react";
-
 
 export default function Lista({ navigation }) {
-  const [dados, setDados] = useState([]); 
-  const [modal, setModal] = useState(false); 
+  const [dados, setDados] = useState([]);
+  const [modal, setModal] = useState(false);
   const [recebeDado, setRecebeDado] = useState("");
+  const [loading, setLoading] = useState(false);
 
   
     async function Buscar() {
+      setLoading(true);
       try {
         const token = await AsyncStorage.getItem("token");
         console.log("token recebido", token);
@@ -31,16 +25,27 @@ export default function Lista({ navigation }) {
           }
         );
 
-        setDados(response.data.ebooks);
+        const payload = response.data || {};
+        const ebooks = Array.isArray(payload.ebooks)
+          ? payload.ebooks
+          : Array.isArray(payload.data)
+          ? payload.data
+          : Array.isArray(payload)
+          ? payload
+          : [];
+
+        console.log("ebooks recebidos", ebooks, payload);
+        setDados(ebooks);
       } catch (error) {
         console.log(error);
+        setDados([]);
+      } finally {
+        setLoading(false);
       }
     }
 
 useFocusEffect(React.useCallback(() => {
-
     Buscar();
-
   }, []));
 
   const renderItem = ({ item }) => (
@@ -51,8 +56,10 @@ useFocusEffect(React.useCallback(() => {
         setModal(!modal);
       }}
     >
-      <Text style={styles.nome}>{item.autor}</Text>
-      <Text>{item.titulo}</Text>
+      <View style={styles.cardHeader}>
+        <Text style={styles.itemTitulo}>{item.titulo}</Text>
+      </View>
+      <Text style={styles.itemAutor}>{item.autor}</Text>
     </Pressable>
   );
 
@@ -71,61 +78,60 @@ useFocusEffect(React.useCallback(() => {
         <FlatList
           data={dados}
           renderItem={renderItem}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item, index) => item.id?.toString() ?? item.id_ebook?.toString() ?? index.toString()}
+          style={styles.list}
+          contentContainerStyle={styles.listContent}
+          showsVerticalScrollIndicator={false}
+          ListEmptyComponent={() => (
+            <View style={styles.emptyContainer}>
+              
+            </View>
+          )}
         />
 
+        <TouchableOpacity
+          style={styles.addButton}
+          onPress={() => navigation.navigate("CadastroLivro")}
+        >
+          <Text style={styles.addButtonText}>+ Novo E-book</Text>
+        </TouchableOpacity>
+
           <Modal visible={modal} animationType="fade" transparent={true}>
-<ScrollView>
-          <View style={styles.modal}>
-
-           
-            
-
-              <View style={styles.modalContent}>
-
-                <Text style={styles.nome}>
-                  {recebeDado.titulo}
-                </Text>
-
-                <Text style={styles.textoModal}>
-                  {recebeDado.texto}
-                </Text>
-
-                <TouchableOpacity
-                  style={styles.botao}
-                  onPress={() => setModal(false)}
-                >
-                  <Text style={styles.textoBotao}>  
-                    Fechar
+            <View style={styles.modalOverlay}>
+              <View style={styles.modalCard}>
+                <Text style={styles.modalTitle}>{recebeDado.titulo}</Text>
+                <Text style={styles.modalSubtitle}>{recebeDado.autor}</Text>
+                <ScrollView contentContainerStyle={styles.modalScroll}>
+                  <Text style={styles.textoModal}>
+                    {recebeDado.texto}
                   </Text>
-                </TouchableOpacity>
-
-              <TouchableOpacity
-              style={styles.botao}
-              onPress={() =>navigation.navigate("EditaLivro", recebeDado)}>
-  <Text style={styles.textoBotao}>
-    Editar
-  </Text>
-</TouchableOpacity>
- <TouchableOpacity
-              style={styles.botao}
-              onPress={() => {
-              console.log(recebeDado)
-              navigation.navigate("DeletaLivro", { recebeDado })
-  }}
->
-  <Text style={styles.textoBotao}>
-    Deletar
-  </Text>
-</TouchableOpacity>
-
+                </ScrollView>
+                <View style={styles.modalButtons}>
+                  <TouchableOpacity
+                    style={[styles.modalButton, styles.modalButtonAlt]}
+                    onPress={() => setModal(false)}
+                  >
+                    <Text style={styles.modalButtonText}>Fechar</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles.modalButton}
+                    onPress={() => navigation.navigate("EditaLivro", { item: recebeDado })}
+                  >
+                    <Text style={styles.modalButtonText}>Editar</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={[styles.modalButton, styles.modalButtonDanger]}
+                    onPress={() => {
+                      console.log(recebeDado);
+                      navigation.navigate("DeletaLivro", { recebeDado });
+                    }}
+                  >
+                    <Text style={styles.modalButtonText}>Deletar</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
-
-         
-
-          </View>
-</ScrollView>
-        </Modal>
+            </View>
+          </Modal>
       </SafeAreaView>
     </ImageBackground>
   );
@@ -136,7 +142,34 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 
- 
+  container: {
+    flex: 1,
+    paddingHorizontal: 18,
+    paddingTop: 20,
+  },
+
+  list: {
+    flex: 1,
+  },
+
+  listContent: {
+    paddingBottom: 24,
+  },
+
+  emptyContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingTop: 40,
+  },
+
+  emptyText: {
+    color: "#fff",
+    fontSize: 18,
+    textAlign: "center",
+    paddingHorizontal: 20,
+  },
+
   titulo: {
     color: "#2c1810",
     fontSize: 55,
@@ -158,24 +191,44 @@ const styles = StyleSheet.create({
   },
 
   card: {
-    backgroundColor: "rgba(255,255,255,0.95)",
-    paddingVertical: 20,
+    backgroundColor: "rgba(255,255,255,0.98)",
+    paddingVertical: 18,
     paddingHorizontal: 18,
-    marginBottom: 18,
-    borderRadius: 22,
+    marginBottom: 16,
+    borderRadius: 24,
 
-    borderWidth: 1.5,
-    borderColor: "#d6b98c",
+    borderWidth: 1,
+    borderColor: "rgba(189, 157, 117, 0.6)",
 
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 5,
     },
-    shadowOpacity: 0.18,
-    shadowRadius: 6,
+    shadowOpacity: 0.16,
+    shadowRadius: 10,
 
-    elevation: 7,
+    elevation: 6,
+  },
+
+  cardHeader: {
+    marginBottom: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: "rgba(124, 96, 65, 0.15)",
+    paddingBottom: 6,
+  },
+
+  itemTitulo: {
+    fontSize: 20,
+    fontWeight: "700",
+    color: "#3c2f1f",
+    marginBottom: 4,
+  },
+
+  itemAutor: {
+    fontSize: 16,
+    color: "#7a5c3e",
+    fontWeight: "600",
   },
 
   nome: {
@@ -186,55 +239,114 @@ const styles = StyleSheet.create({
     letterSpacing: 1,
   },
 
- modal: {
+  modalOverlay: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(0,0,0,0.6)",
+    backgroundColor: "rgba(0, 0, 0, 0.6)",
+    paddingHorizontal: 16,
   },
 
-  modalContent: {
-    width: "85%",
-    backgroundColor: "#fff",
-    borderRadius: 25,
-    padding: 25,
-    alignItems: "center",
+  modalCard: {
+    width: "100%",
+    maxWidth: 420,
+    backgroundColor: "rgba(255,255,255,0.98)",
+    borderRadius: 28,
+    padding: 24,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 12,
+    },
+    shadowOpacity: 0.18,
+    shadowRadius: 18,
+    elevation: 12,
+  },
 
+  modalTitle: {
+    fontSize: 24,
+    fontWeight: "800",
+    color: "#2c1d12",
+    textAlign: "center",
+    marginBottom: 10,
+  },
+
+  modalSubtitle: {
+    fontSize: 16,
+    color: "#7a5c3e",
+    textAlign: "center",
+    marginBottom: 18,
+  },
+
+  modalScroll: {
+    paddingBottom: 12,
+  },
+
+  textoModal: {
+    fontSize: 17,
+    color: "#424242",
+    textAlign: "left",
+    lineHeight: 26,
+    marginBottom: 20,
+  },
+
+  modalButtons: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
+    gap: 10,
+  },
+
+  modalButton: {
+    flex: 0,
+    minWidth: 90,
+    backgroundColor: "#A47854",
+    paddingVertical: 10,
+    paddingHorizontal: 14,
+    borderRadius: 16,
+    alignItems: "center",
+    justifyContent: "center",
+    marginHorizontal: 4,
+  },
+
+  modalButtonAlt: {
+    backgroundColor: "#E1D8C5",
+  },
+
+  modalButtonDanger: {
+    backgroundColor: "#c1503f",
+  },
+
+  modalButtonText: {
+    color: "#fff",
+    fontSize: 15,
+    fontWeight: "700",
+    letterSpacing: 0.5,
+  },
+
+  addButton: {
+    backgroundColor: "#A47854",
+    paddingVertical: 16,
+    paddingHorizontal: 24,
+    borderRadius: 20,
+    alignItems: "center",
+    justifyContent: "center",
+    marginHorizontal: 18,
+    marginBottom: 24,
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 6,
     },
-    shadowOpacity: 0.25,
-    shadowRadius: 8,
-
-    elevation: 10,
+    shadowOpacity: 0.16,
+    shadowRadius: 10,
+    elevation: 6,
   },
 
-  textoModal: {
+  addButtonText: {
+    color: "#fff",
     fontSize: 18,
-    color: "#444",
-    textAlign: "center",
-    marginTop: 10,
-    lineHeight: 26,
-  },
-
-  botao: {
-    marginTop: 20,
-    backgroundColor: "#c49a6c",
-    paddingVertical: 12,
-    paddingHorizontal: 25,
-    borderRadius: 14,
-
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 3,
-    },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-
-    elevation: 5,
-    
+    fontWeight: "700",
+    letterSpacing: 1,
   },
 });

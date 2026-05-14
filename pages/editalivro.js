@@ -13,15 +13,16 @@ import { Alert, Image, View, Text, TouchableOpacity } from "react-native";
 export default function EditaLivro({ navigation }) {
 
   const route = useRoute();
-  const { item } = route.params || {};
+  const params = route.params || {};
+  const item = params.item || params;
    
 
   const [id, setId] = useState(item?.id_ebook || "");
-  const [titulo, setTitulo] = useState(item?.titulo||"");
-  const [autor, setAutor] = useState(item?.autor||"");
-  const [sinopse, setSinopse] = useState(item?.sinopse||"");
-  const [texto, settexto] = useState(item?.texto||"");
-  const [gen, setGen] = useState(item?.genero||"");
+  const [titulo, setTitulo] = useState(item?.titulo || "");
+  const [autor, setAutor] = useState(item?.autor || "");
+  const [sinopse, setSinopse] = useState(item?.sinopse || "");
+  const [texto, settexto] = useState(item?.texto || "");
+  const [gen, setGen] = useState(item?.genero || "");
 
  
 
@@ -43,29 +44,23 @@ export default function EditaLivro({ navigation }) {
     console.log("token.:",token);
 
     if(token){
-      console.log("id.:",item.id_ebook);
+      console.log("id.:", id);
       const response = await axios.put("http://10.122.41.152:8000/api/altera_ebook",{
-
-    
-  token:token,
-  id_ebook:item.id_ebook,
-  titulo:titulo,
-  autor:autor,
-  sinopse:sinopse,
-  texto:texto,
-  genero:gen,
-
-
+        token: token,
+        id_ebook: id,
+        titulo: titulo,
+        autor: autor,
+        sinopse: sinopse,
+        texto: texto,
+        genero: gen,
       });
-      console.log (response.data);
+      console.log(response.data);
 
-       Alert.alert("SUCESSO", "Dados alterados com sucesso!!");
-       navigation.replace("Conceito");
+      Alert.alert("SUCESSO", "Dados alterados com sucesso!!");
+      navigation.navigate("Conceito", { refresh: Date.now() });
     }
-    }catch(error){
-
-      console.log ("erro",error.response.data.errors);
-
+    } catch (error) {
+      console.log("erro", error?.response?.data?.errors ?? error?.response?.data ?? error?.message ?? error);
     }
 }
 }
