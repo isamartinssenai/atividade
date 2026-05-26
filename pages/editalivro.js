@@ -17,7 +17,6 @@ export default function EditaLivro({ navigation }) {
   const item = params.item || params;
    
 
-  const [id, setId] = useState(item?.id_ebook || "");
   const [titulo, setTitulo] = useState(item?.titulo || "");
   const [autor, setAutor] = useState(item?.autor || "");
   const [sinopse, setSinopse] = useState(item?.sinopse || "");
@@ -44,10 +43,10 @@ export default function EditaLivro({ navigation }) {
     console.log("token.:",token);
 
     if(token){
-      console.log("id.:", id);
+      console.log("id.:", item?.id);
       const response = await axios.put("http://10.122.41.152:8000/api/altera_ebook",{
         token: token,
-        id_ebook: id,
+        id_ebook: item?.id,
         titulo: titulo,
         autor: autor,
         sinopse: sinopse,

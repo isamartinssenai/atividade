@@ -1,6 +1,6 @@
-import React, { useState,useCallback } from "react";
+import React, { useState,useCallback, useEffect } from "react";
 import axios from "axios";
-import {View, Text, StyleSheet, FlatList, Pressable, Modal, TouchableOpacity, ImageBackground, ScrollView} from "react-native";
+import {View, Text, StyleSheet, FlatList, Pressable, Modal, TouchableOpacity, ImageBackground, ScrollView, Alert} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from "@react-navigation/native";
@@ -17,7 +17,7 @@ export default function Lista({ navigation }) {
       try {
         const token = await AsyncStorage.getItem("token");
         console.log("token recebido", token);
-
+if (token) {
         const response = await axios.post(
           "http://10.122.41.152:8000/api/todos_ebooks",
           {
@@ -33,9 +33,10 @@ export default function Lista({ navigation }) {
           : Array.isArray(payload)
           ? payload
           : [];
-
+      
         console.log("ebooks recebidos", ebooks, payload);
         setDados(ebooks);
+      }
       } catch (error) {
         console.log(error);
         setDados([]);
@@ -44,10 +45,33 @@ export default function Lista({ navigation }) {
       }
     }
 
-useFocusEffect(React.useCallback(() => {
+useEffect(() => {
     Buscar();
-  }, []));
+  }, []);
 
+
+  async function deletar() {
+    try {
+        const token = await AsyncStorage.getItem("token");
+        console.log("token recebido", token);
+
+
+      console.log("deletar ebook id:", recebeDado.id)
+      if(token){
+        const response = await axios.delete(
+          "http://10.122.41.152:8000/api/deleta_ebook",
+          {
+            token: token,
+            id_ebook: recebeDado.id,
+          }
+        );
+         console.log("cheguei aqui:", recebeDado.id)
+  }
+    }
+  catch (error) {
+    console.log("erro ao deletar", error?.response?.data ?? error?.message ?? error);
+  }
+  }
   const renderItem = ({ item }) => (
     <Pressable
       style={styles.card}
@@ -96,7 +120,7 @@ useFocusEffect(React.useCallback(() => {
           <Text style={styles.addButtonText}>+ Novo E-book</Text>
         </TouchableOpacity>
 
-          <Modal visible={modal} animationType="fade" transparent={true}>
+          <Modal visible={modal} animationType="fade" transparent={true} onRequestClose={()=>setModal(false)}>
             <View style={styles.modalOverlay}>
               <View style={styles.modalCard}>
                 <Text style={styles.modalTitle}>{recebeDado.titulo}</Text>
@@ -122,8 +146,10 @@ useFocusEffect(React.useCallback(() => {
                   <TouchableOpacity
                     style={[styles.modalButton, styles.modalButtonDanger]}
                     onPress={() => {
-                      console.log(recebeDado);
-                      navigation.navigate("DeletaLivro", { recebeDado });
+                      Alert.alert("Atenção", "Tem certeza que deseja deletar este e-book?", [{ text: "Cancelar", style: "cancel" }, { text: "Deletar", style: "destructive", onPress: () => {
+                        deletar();
+                        setModal(false);
+                      } }]);
                     }}
                   >
                     <Text style={styles.modalButtonText}>Deletar</Text>
